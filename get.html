@@ -10,15 +10,17 @@
     .wrap { max-width:640px; margin:0 auto; padding:72px 20px; text-align:center; }
     h1 { font-size:32px; margin:0 0 6px; }
     .tag { color:#D4142A; font-weight:800; margin:0 0 36px; }
-    .btns { display:flex; flex-direction:column; gap:14px; max-width:320px; margin:0 auto; }
-    .btn {
-      display:block; padding:16px 20px; border-radius:12px; text-decoration:none;
-      font-weight:800; font-size:17px; border:1px solid #24406B; background:#13294B; color:#F5F7FA;
-    }
-    .btn:hover { background:#1B355F; }
-    .btn .sub { display:block; font-weight:600; font-size:13px; color:#9FB0C9; margin-top:2px; }
-    .btn.soon { opacity:.55; pointer-events:none; }
-    .foot { margin-top:36px; color:#6E83A3; font-size:14px; }
+    .stores { display:flex; flex-direction:column; align-items:center; gap:18px; }
+    .store { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .badge { display:inline-block; line-height:0; }
+    .badge img { display:block; }
+    /* Google's badge has built-in padding, so it needs a bit more height to
+       visually balance the tighter Apple badge. */
+    .badge.ios img { height:52px; }
+    .badge.android img { height:74px; }
+    .badge.soon { opacity:.45; pointer-events:none; cursor:default; }
+    .soon-cap { color:#9FB0C9; font-size:13px; font-weight:700; }
+    .foot { margin-top:40px; color:#6E83A3; font-size:14px; }
     .foot a { color:#9FB0C9; }
   </style>
 </head>
@@ -27,9 +29,19 @@
     <h1>Erik's Army</h1>
     <p class="tag">Old school. No politics, no BS. Just the futbol. ⚽</p>
 
-    <div class="btns" id="btns">
-      <a class="btn" id="ios" href="#">Download on the App Store<span class="sub"></span></a>
-      <a class="btn" id="android" href="#">Get it on Google Play<span class="sub"></span></a>
+    <div class="stores">
+      <div class="store">
+        <a class="badge ios" id="ios" href="#" aria-label="Download on the App Store">
+          <img src="assets/app-store-badge.svg" alt="Download on the App Store" />
+        </a>
+        <span class="soon-cap" id="ios-soon" hidden>Coming soon</span>
+      </div>
+      <div class="store">
+        <a class="badge android" id="android" href="#" aria-label="Get it on Google Play">
+          <img src="assets/google-play-badge.png" alt="Get it on Google Play" />
+        </a>
+        <span class="soon-cap" id="android-soon" hidden>Coming soon</span>
+      </div>
     </div>
 
     <p class="foot"><a href="index.html">Home</a> · <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a></p>
@@ -53,22 +65,22 @@
                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
     var isAndroid = /Android/.test(ua);
 
-    function setBtn(id, live, url, soonText) {
+    function setBadge(id, live, url) {
       var el = document.getElementById(id);
-      var sub = el.querySelector('.sub');
+      var soon = document.getElementById(id + '-soon');
       if (live) {
         el.href = url;
-        sub.textContent = '';
         el.classList.remove('soon');
+        soon.hidden = true;
       } else {
         el.href = '#';
-        sub.textContent = soonText;
         el.classList.add('soon');
+        soon.hidden = false;
       }
     }
 
-    setBtn('ios', IOS_LIVE, APP_STORE_URL, 'Coming soon');
-    setBtn('android', ANDROID_LIVE, PLAY_URL, 'Coming soon');
+    setBadge('ios', IOS_LIVE, APP_STORE_URL);
+    setBadge('android', ANDROID_LIVE, PLAY_URL);
 
     // Auto-send mobile visitors straight to their store when it's live.
     if (isIOS && IOS_LIVE) {
@@ -76,7 +88,7 @@
     } else if (isAndroid && ANDROID_LIVE) {
       window.location.replace(PLAY_URL);
     }
-    // Desktop / pre-launch: show both buttons (handled above).
+    // Desktop / pre-launch: both badges shown above.
   </script>
 </body>
 </html>
