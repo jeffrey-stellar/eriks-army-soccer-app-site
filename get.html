@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Get Erik's Army</title>
+  <meta name="description" content="Download Erik's Army — old-school match chat. No politics, no BS. Just the futbol." />
+  <style>
+    body { margin:0; background:#0B1A30; color:#F5F7FA; font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+    .wrap { max-width:640px; margin:0 auto; padding:72px 20px; text-align:center; }
+    h1 { font-size:32px; margin:0 0 6px; }
+    .tag { color:#D4142A; font-weight:800; margin:0 0 36px; }
+    .btns { display:flex; flex-direction:column; gap:14px; max-width:320px; margin:0 auto; }
+    .btn {
+      display:block; padding:16px 20px; border-radius:12px; text-decoration:none;
+      font-weight:800; font-size:17px; border:1px solid #24406B; background:#13294B; color:#F5F7FA;
+    }
+    .btn:hover { background:#1B355F; }
+    .btn .sub { display:block; font-weight:600; font-size:13px; color:#9FB0C9; margin-top:2px; }
+    .btn.soon { opacity:.55; pointer-events:none; }
+    .foot { margin-top:36px; color:#6E83A3; font-size:14px; }
+    .foot a { color:#9FB0C9; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Erik's Army</h1>
+    <p class="tag">Old school. No politics, no BS. Just the futbol. ⚽</p>
+
+    <div class="btns" id="btns">
+      <a class="btn" id="ios" href="#">Download on the App Store<span class="sub"></span></a>
+      <a class="btn" id="android" href="#">Get it on Google Play<span class="sub"></span></a>
+    </div>
+
+    <p class="foot"><a href="index.html">Home</a> · <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a></p>
+  </div>
+
+  <script>
+    // ---- Config: edit these as each store goes live -------------------------
+    // Find your Apple App ID in App Store Connect → your app → App Information →
+    // "Apple ID" (a number like 6480001234). Then flip IOS_LIVE to true.
+    var APPLE_APP_ID  = 'YOUR_APPLE_ID';        // <-- replace with the numeric Apple ID
+    var ANDROID_PKG   = 'com.eriksarmy.app';    // already correct
+    var IOS_LIVE      = false;                   // <-- set true when the App Store listing is live
+    var ANDROID_LIVE  = false;                   // <-- set true when the Play listing is live
+    // ------------------------------------------------------------------------
+
+    var APP_STORE_URL = 'https://apps.apple.com/app/id' + APPLE_APP_ID;
+    var PLAY_URL      = 'https://play.google.com/store/apps/details?id=' + ANDROID_PKG;
+
+    var ua = navigator.userAgent || '';
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); // iPadOS
+    var isAndroid = /Android/.test(ua);
+
+    function setBtn(id, live, url, soonText) {
+      var el = document.getElementById(id);
+      var sub = el.querySelector('.sub');
+      if (live) {
+        el.href = url;
+        sub.textContent = '';
+        el.classList.remove('soon');
+      } else {
+        el.href = '#';
+        sub.textContent = soonText;
+        el.classList.add('soon');
+      }
+    }
+
+    setBtn('ios', IOS_LIVE, APP_STORE_URL, 'Coming soon');
+    setBtn('android', ANDROID_LIVE, PLAY_URL, 'Coming soon');
+
+    // Auto-send mobile visitors straight to their store when it's live.
+    if (isIOS && IOS_LIVE) {
+      window.location.replace(APP_STORE_URL);
+    } else if (isAndroid && ANDROID_LIVE) {
+      window.location.replace(PLAY_URL);
+    }
+    // Desktop / pre-launch: show both buttons (handled above).
+  </script>
+</body>
+</html>
