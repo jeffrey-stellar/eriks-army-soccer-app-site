@@ -26,6 +26,15 @@
     .badge.android img { height:74px; }
     .badge.soon { opacity:.45; pointer-events:none; cursor:default; }
     .soon-cap { color:#9FB0C9; font-size:13px; font-weight:700; }
+    .notify { margin-top:40px; }
+    .notify h2 { font-size:20px; margin:0 0 6px; }
+    .notify p { color:#9FB0C9; margin:0 0 18px; font-size:15px; }
+    .notify form { display:flex; gap:10px; max-width:420px; margin:0 auto; flex-wrap:wrap; justify-content:center; }
+    .notify input { flex:1 1 220px; min-width:0; padding:13px 16px; border-radius:10px; border:1px solid #28425F; background:#0F2238; color:#F5F7FA; font-size:16px; }
+    .notify input::placeholder { color:#6E83A3; }
+    .notify button { padding:13px 22px; border-radius:10px; border:0; background:#E8B53D; color:#0B1A30; font-weight:800; font-size:16px; cursor:pointer; }
+    .notify button:disabled { opacity:.5; cursor:default; }
+    .notify .msg { margin-top:14px; color:#2BB673; font-weight:700; min-height:20px; }
     .foot { margin-top:40px; color:#6E83A3; font-size:14px; }
     .foot a { color:#9FB0C9; }
   </style>
@@ -52,6 +61,17 @@
       </div>
     </div>
 
+    <!-- Pre-launch waitlist: JS shows this only while both stores are "coming soon". -->
+    <div class="notify" id="notify" hidden>
+      <h2>Get in early ⚽</h2>
+      <p>Drop your email and we'll ping you the second the app goes live — just in time for the World Cup.</p>
+      <form id="notify-form">
+        <input id="notify-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+        <button type="submit" id="notify-btn">Notify me</button>
+      </form>
+      <p class="msg" id="notify-msg"></p>
+    </div>
+
     <p class="foot"><a href="index.html">Home</a> · <a href="support.html">Support</a> · <a href="privacy.html">Privacy</a><br />© 2026 Stellar Ideas LLC</p>
   </div>
 
@@ -63,6 +83,11 @@
     var ANDROID_PKG   = 'com.eriksarmy.app';    // already correct
     var IOS_LIVE      = false;                   // <-- set true when the App Store listing is live
     var ANDROID_LIVE  = false;                   // <-- set true when the Play listing is live
+
+    // Pre-launch waitlist endpoint. Easiest: create a free form at formspree.io
+    // (New form → copy its endpoint, e.g. https://formspree.io/f/abcdwxyz) and paste
+    // it here. The form posts {email, source}. Until set, the signup stays hidden.
+    var FORM_ENDPOINT = 'REPLACE_WITH_FORM_ENDPOINT';
     // ------------------------------------------------------------------------
 
     var APP_STORE_URL = 'https://apps.apple.com/app/id' + APPLE_APP_ID;
@@ -97,6 +122,47 @@
       window.location.replace(PLAY_URL);
     }
     // Desktop / pre-launch: both badges shown above.
+
+    // ---- Pre-launch waitlist -----------------------------------------------
+    // Show the email capture only while NEITHER store is live and an endpoint is set.
+    var endpointReady = FORM_ENDPOINT.indexOf('REPLACE_') === -1;
+    if (!IOS_LIVE && !ANDROID_LIVE && endpointReady) {
+      var notify = document.getElementById('notify');
+      var form = document.getElementById('notify-form');
+      var emailEl = document.getElementById('notify-email');
+      var btn = document.getElementById('notify-btn');
+      var msg = document.getElementById('notify-msg');
+      notify.hidden = false;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = (emailEl.value || '').trim();
+        if (!email) return;
+        btn.disabled = true;
+        msg.style.color = '#2BB673';
+        msg.textContent = 'Signing you up…';
+        fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ email: email, source: 'get-page' })
+        })
+          .then(function (res) {
+            if (res.ok) {
+              form.hidden = true;
+              msg.textContent = "You're on the list — we'll ping you at launch. ⚽";
+            } else {
+              msg.style.color = '#D4142A';
+              msg.textContent = 'Something went wrong — please try again.';
+              btn.disabled = false;
+            }
+          })
+          .catch(function () {
+            msg.style.color = '#D4142A';
+            msg.textContent = 'Something went wrong — please try again.';
+            btn.disabled = false;
+          });
+      });
+    }
   </script>
 </body>
 </html>
