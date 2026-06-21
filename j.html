@@ -18,6 +18,7 @@
     .room { color:#9FB0C9; font-size:14px; margin:6px 0 32px; }
     .btn { display:block; width:100%; box-sizing:border-box; padding:16px; border-radius:12px; font-size:16px; font-weight:800; text-decoration:none; margin:12px 0; }
     .primary { background:#D4142A; color:#fff; }
+    .web { background:#E8B53D; color:#0B1A30; }
     .ghost { background:#13294B; color:#F5F7FA; border:1px solid #24406B; }
     .foot { margin-top:36px; color:#6E83A3; font-size:13px; }
     .foot a { color:#9FB0C9; }
@@ -31,6 +32,7 @@
     <p class="room" id="room"></p>
 
     <a class="btn primary" id="open" href="#">Open in the app</a>
+    <a class="btn web" id="webjoin" href="#">Join in your browser</a>
     <a class="btn ghost" href="get.html">Get the app</a>
 
     <p class="foot">
@@ -47,6 +49,9 @@
     var r = (p.get('r') || '').replace(/[^A-Za-z0-9_-]/g, '');
     var open = document.getElementById('open');
     open.href = r ? 'eriksarmy://room/' + r : 'eriksarmy://';
+    // "Join in your browser" → the live web app, deep-linked to the same room.
+    var WEB_APP = 'https://app.eriksarmy.stellarideasllc.com';
+    document.getElementById('webjoin').href = r ? WEB_APP + '/room/' + r : WEB_APP;
     // Friendly hint of which room (topic), derived from the id's suffix.
     if (r && r.indexOf('__') > -1) {
       var topic = r.split('__')[1].replace(/-/g, ' ');
