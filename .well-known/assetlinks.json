@@ -1,10 +1,15 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.eriksarmy.app",
-      "sha256_cert_fingerprints": ["REPLACE_WITH_PLAY_APP_SIGNING_SHA256"]
+      "sha256_cert_fingerprints": [
+        "20:75:55:89:90:63:87:70:76:82:B3:CE:31:33:DF:1B:D3:1F:C0:2A:32:9B:B1:08:0D:3C:19:75:A6:B1:F6:5E"
+      ]
     }
   }
 ]
