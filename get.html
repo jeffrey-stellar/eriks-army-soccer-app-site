@@ -73,7 +73,7 @@
       <p class="playsub">No install — works on PC, Mac &amp; tablet.</p>
     </div>
 
-    <!-- Pre-launch waitlist: JS shows this to any visitor whose own store isn't live yet (e.g. Android while Play is in review). -->
+    <!-- Pre-launch waitlist: JS shows this only to a visitor whose own store isn't live yet. Both stores are live now, so it stays hidden. -->
     <div class="notify" id="notify" hidden>
       <h2>Get in early ⚽</h2>
       <p>Drop your email and we'll ping you the second the app goes live — just in time for the summer's biggest tournament.</p>
@@ -136,9 +136,9 @@
     // Desktop / pre-launch: both badges shown above.
 
     // ---- Pre-launch waitlist -----------------------------------------------
-    // Show the email capture to any visitor whose OWN store isn't live yet —
-    // e.g. Android folks while the Play listing is still in review, even though
-    // iOS has already launched. Auto-hides once every store is live.
+    // Show the email capture to any visitor whose OWN store isn't live yet.
+    // Auto-hides once every store is live (both are now), so this is dormant
+    // unless a future store-state flag above is flipped back to false.
     var endpointReady = FORM_ENDPOINT.indexOf('REPLACE_') === -1;
     var visitorStoreLive = (isIOS && IOS_LIVE) || (isAndroid && ANDROID_LIVE);
     var anyStorePending = !IOS_LIVE || !ANDROID_LIVE;
